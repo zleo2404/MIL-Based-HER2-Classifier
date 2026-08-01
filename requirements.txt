@@ -1,0 +1,32 @@
+# Repository per le GPU (CUDA 11.8)
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+# Deep Learning & Tensori
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
+
+# WSI & Image Processing
+#openslide-python==1.3.1
+opencv-python-headless>=4.8.0  # Headless per evitare errori GUI su SLURM
+Pillow>=10.0.0
+albumentations>=1.3.1
+
+# Data Manipulation & Math
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0
+
+# Machine Learning & Hyperparameter Optimization
+scikit-learn>=1.3.0
+optuna>=3.2.0
+
+# Grafici e Visualizzazione
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Explainable AI (XAI)
+grad-cam>=1.4.8
+
+# Utility & API
+tqdm>=4.65.0
+kaggle>=1.6.0

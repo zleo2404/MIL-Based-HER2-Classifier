@@ -1,0 +1,46 @@
+=========================================================
+Inizio addestramento: Fri Jul 31 05:17:06 PM CEST 2026
+Job ID: 69017
+Nodo assegnato: ws1gpu2-ng.cs.unibo.it
+=========================================================
+=== Starting New Run: 20260731_171719 ===
+Run outputs will be saved in: /scratch.hpc/leonardo.meloni/HER2/runs/run_20260731_171719
+
+--- Extracting Features from WSIs ---
+Total WSIs processed: 208 | Discarded (Equivocal): 3
+Patches Saved: 584 (17.73%) | Discarded: 2709 (82.27%)
+
+--- Starting Optuna Optimization ---
+
+=== BEST HYPERPARAMETERS FOUND ===
+  hidden_layers: 92
+  learning_rate: 0.0032872803244122385
+  weight_decay: 0.00039490119782486225
+  dropout: 0.3510700379180916
+  loss_weight: 0.2723799892817204
+
+--- Starting Final Training ---
+Epoch 1/50 | Train Loss: 0.1318 | Acc: 0.6216 | Val Loss: 0.1060 | Acc: 0.3333 | F1: 0.3143
+Epoch 2/50 | Train Loss: 0.0627 | Acc: 0.7117 | Val Loss: 0.0734 | Acc: 0.6667 | F1: 0.5556
+Epoch 3/50 | Train Loss: 0.0731 | Acc: 0.7027 | Val Loss: 0.0765 | Acc: 0.8750 | F1: 0.4667
+Epoch 4/50 | Train Loss: 0.0534 | Acc: 0.7748 | Val Loss: 0.0659 | Acc: 0.8333 | F1: 0.7000
+Epoch 5/50 | Train Loss: 0.0248 | Acc: 0.9099 | Val Loss: 0.1032 | Acc: 0.7500 | F1: 0.5500
+Epoch 6/50 | Train Loss: 0.0199 | Acc: 0.9099 | Val Loss: 0.1259 | Acc: 0.8333 | F1: 0.6190
+Epoch 7/50 | Train Loss: 0.1049 | Acc: 0.8378 | Val Loss: 0.9932 | Acc: 0.1667 | F1: 0.1608
+Epoch 8/50 | Train Loss: 0.2136 | Acc: 0.7658 | Val Loss: 0.4141 | Acc: 0.5000 | F1: 0.3950
+Epoch 9/50 | Train Loss: 0.1525 | Acc: 0.7838 | Val Loss: 0.2916 | Acc: 0.6667 | F1: 0.5556
+Epoch 10/50 | Train Loss: 0.0750 | Acc: 0.8919 | Val Loss: 0.2062 | Acc: 0.8333 | F1: 0.7000
+Epoch 11/50 | Train Loss: 0.0125 | Acc: 0.9820 | Val Loss: 0.4022 | Acc: 0.8750 | F1: 0.4667
+Early stopping activated
+Optimized Threshold found: 0.3080
+
+=== TESTING ===
+Test Loss: 0.1487
+Test Accuracy: 0.5417
+Test F1 Score: 0.4667
+
+✅ Finito! I file di questa esecuzione sono in: /scratch.hpc/leonardo.meloni/HER2/runs/run_20260731_171719
+✅ Metriche registrate nel log globale: /scratch.hpc/leonardo.meloni/HER2/runs/all_runs_metrics.csv
+=========================================================
+Addestramento completato: Fri Jul 31 05:35:54 PM CEST 2026
+=========================================================
