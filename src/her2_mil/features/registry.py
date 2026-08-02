@@ -13,7 +13,7 @@ from her2_mil.features.uni import UNIFeatureExtractor
 
 FEATURE_EXTRACTORS = {
     "resnet50": ResNet50FeatureExtractor,
-    "uni": UNIFeatureExtractor
+    "uni": UNIFeatureExtractor,
 }
 
 
