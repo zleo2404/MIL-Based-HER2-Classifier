@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --job-name=HER2_FeatureExtraction
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=leonardo.meloni@unibo.it
+#SBATCH --time=12:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --partition=rtx2080
+#SBATCH --gres=gpu:1
+#SBATCH --chdir=/scratch.hpc/leonardo.meloni/HER2
+#SBATCH --output=slurm/log_output_%j.txt
+#SBATCH --error=slurm/log_error_%j.txt
+
+# Usage: sbatch slurm/extract_features_job.sh [path/to/config.yaml]
+CONFIG=${1:-configs/default.yaml}
+
+echo "========================================================="
+echo "Feature extraction start: $(date)"
+echo "Job ID: $SLURM_JOB_ID | Node: $SLURM_NODELIST | Config: $CONFIG"
+echo "========================================================="
+
+srun /scratch.hpc/leonardo.meloni/venv/bin/python3 /scratch.hpc/leonardo.meloni/HER2/script/extract_features.py --config "$CONFIG"
+
+echo "========================================================="
+echo "Feature extraction done: $(date)"
+echo "========================================================="

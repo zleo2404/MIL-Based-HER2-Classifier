@@ -30,3 +30,7 @@ grad-cam>=1.4.8
 # Utility & API
 tqdm>=4.65.0
 kaggle>=1.6.0
+
+# Modelli Pre-addestrati (UNI)
+timm>=0.9.0
+huggingface_hub>=0.17.0

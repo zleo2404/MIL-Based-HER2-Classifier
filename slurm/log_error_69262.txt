@@ -1,0 +1,2 @@
+/scratch.hpc/leonardo.meloni/venv/bin/python3: can't open file '/scratch.hpc/leonardo.meloni/HER2/ /scratch.hpc/leonardo.meloni/HER2/script/extract.py': [Errno 2] No such file or directory
+srun: error: ws1gpu2-ng.cs.unibo.it: task 0: Exited with exit code 2
