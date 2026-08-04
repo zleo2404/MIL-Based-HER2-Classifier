@@ -21,12 +21,7 @@ echo "Feature extraction start: $(date)"
 echo "Job ID: $SLURM_JOB_ID | Node: $SLURM_NODELIST | Config: $CONFIG"
 echo "========================================================="
 
-export TMPDIR=/scratch.hpc/leonardo.meloni/tmp
-
-source /scratch.hpc/leonardo.meloni/miniconda3/bin/activate
-conda activate her2_env
-
-python scripts/extract_features.py --config "$CONFIG"
+srun /scratch.hpc/leonardo.meloni/venv/bin/python3 /scratch.hpc/leonardo.meloni/HER2/script/extract_features.py --config "$CONFIG"
 
 echo "========================================================="
 echo "Feature extraction done: $(date)"

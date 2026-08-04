@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/scratch.hpc/leonardo.meloni/HER2/script/extract_features.py", line 23, in <module>
+    from her2_mil.config import load_config
+ModuleNotFoundError: No module named 'her2_mil'
+srun: error: ws1gpu1-ng.cs.unibo.it: task 0: Exited with exit code 1

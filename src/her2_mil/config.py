@@ -21,8 +21,8 @@ class PathsConfig:
 
     def __post_init__(self) -> None:
         base = Path(self.base_dir)
-        self.wsi_dir = self.wsi_dir or str(base / "data" / "raw" / "BRCA")
-        self.labels_csv = self.labels_csv or str(Path(self.wsi_dir) / "her2_labels.csv")
+        self.wsi_dir = "/scratch.hpc/sabrina.tassinari/ProgettoTesi/wsi_organizzate"
+        self.labels_csv = "/scratch.hpc/sabrina.tassinari/ProgettoTesi/wsi_organizzate/her2_labels.csv")
         self.runs_dir = self.runs_dir or str(base / "runs")
         self.features_dir = self.features_dir or str(base / "features")
 
