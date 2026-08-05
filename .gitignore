@@ -8,6 +8,9 @@ __pycache__/
 
 /data/
 .nfs*
+features/
+slurm/log_output*
+slurm/log_error*
 
 # Distribution / packaging
 .Python

@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/scratch.hpc/leonardo.meloni/miniconda3/bin/conda", line 12, in <module>
-    from conda.cli import main
-ImportError: cannot import name 'main' from 'conda.cli' (unknown location)
-Traceback (most recent call last):
-  File "/scratch.hpc/leonardo.meloni/miniconda3/bin/conda", line 12, in <module>
-    from conda.cli import main
-ImportError: cannot import name 'main' from 'conda.cli' (unknown location)
-/var/spool/slurmd/job69135/slurm_script: line 29: python: command not found

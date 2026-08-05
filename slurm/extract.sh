@@ -21,6 +21,9 @@ echo "Feature extraction start: $(date)"
 echo "Job ID: $SLURM_JOB_ID | Node: $SLURM_NODELIST | Config: $CONFIG"
 echo "========================================================="
 
+export HF_HOME=/scratch.hpc/leonardo.meloni/conda_home
+export HF_HUB_OFFLINE=1
+
 srun /scratch.hpc/leonardo.meloni/venv/bin/python3 /scratch.hpc/leonardo.meloni/HER2/script/extract_features.py --config "$CONFIG"
 
 echo "========================================================="

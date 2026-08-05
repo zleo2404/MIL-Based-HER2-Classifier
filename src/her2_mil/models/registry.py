@@ -10,10 +10,12 @@ No other file in the pipeline needs to change.
 from her2_mil.models.abmil import ABMIL
 from her2_mil.models.base import MILModel
 from her2_mil.models.transmil import TransMIL
+from her2_mil.models.minabmil import MinimalAttentionMIL
 
 MIL_MODELS = {
     "abmil": ABMIL,
     "transmil": TransMIL,
+    "minabmil": MinimalAttentionMIL,
 }
 
 

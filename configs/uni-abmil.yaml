@@ -1,0 +1,43 @@
+# Default experiment configuration.
+
+seed: 42
+device: cuda
+
+paths:
+  base_dir: /scratch.hpc/leonardo.meloni/HER2
+
+patching:
+  level: 2
+  patch_size: 1024
+  tissue_ratio_threshold: 0.4
+  artifact_ratio_threshold: 0.05
+
+features:
+  extractor_name: uni  
+  
+labels:
+  mapping:
+    Negative: 1
+    Positive: 0
+
+model:
+  name: abmil               
+  num_classes: 1
+
+optuna:
+  n_trials: 50
+  n_startup_trials: 5
+  n_warmup_steps: 5
+  threshold_trials: 20
+  search_space:
+    hidden_dim: [64, 128]
+    learning_rate: [1.0e-5, 1.0e-2]
+    weight_decay: [1.0e-5, 5.0e-3]
+    dropout: [0.2, 0.4]
+    loss_weight: [0.1, 0.3]
+
+training:
+  max_epochs: 50
+  patience: 7
+  val_size: 0.30
+  test_size_of_val: 0.50

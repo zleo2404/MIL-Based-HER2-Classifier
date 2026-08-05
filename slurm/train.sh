@@ -23,12 +23,8 @@ echo "Job ID: $SLURM_JOB_ID | Node: $SLURM_NODELIST"
 echo "Config: $CONFIG | Features run: $FEATURES_RUN"
 echo "========================================================="
 
-export TMPDIR=/scratch.hpc/leonardo.meloni/tmp
 
-source /scratch.hpc/leonardo.meloni/miniconda3/bin/activate
-conda activate her2_env
-
-python scripts/train.py --config "$CONFIG" --features-run "$FEATURES_RUN"
+srun /scratch.hpc/leonardo.meloni/venv/bin/python3 /scratch.hpc/leonardo.meloni/HER2/script/train.py --config "$CONFIG" --features-run "$FEATURES_RUN"
 
 echo "========================================================="
 echo "Training done: $(date)"

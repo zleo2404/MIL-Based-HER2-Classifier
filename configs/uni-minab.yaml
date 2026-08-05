@@ -13,7 +13,7 @@ patching:
   artifact_ratio_threshold: 0.05
 
 features:
-  extractor_name: resnet50   
+  extractor_name: uni  
   
 labels:
   mapping:
@@ -21,7 +21,7 @@ labels:
     Positive: 0
 
 model:
-  name: abmil               
+  name: minabmil               
   num_classes: 1
 
 optuna:
