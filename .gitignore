@@ -11,6 +11,12 @@ __pycache__/
 features/
 slurm/log_output*
 slurm/log_error*
+*.pt
+*.db
+
+runs/
+configs/
+*.out
 
 # Distribution / packaging
 .Python

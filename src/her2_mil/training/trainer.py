@@ -4,8 +4,20 @@ from typing import Dict, List, Tuple
 
 import torch
 import torch.optim as optim
-from sklearn.metrics import f1_score
+from sklearn.metrics import (
+    f1_score, 
+    roc_auc_score, 
+    roc_curve, 
+    auc, 
+    classification_report, 
+    confusion_matrix
+)
 from torchvision.ops import sigmoid_focal_loss
+from torch.optim.lr_scheduler import OneCycleLR
+from torch.optim.lr_scheduler import LinearLR, CosineAnnealingLR, SequentialLR
+import torch.nn.functional as F
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+
 
 from her2_mil.config import Config
 from her2_mil.models.base import MILModel
@@ -22,10 +34,55 @@ def train_final_model(
     validation_dataloader,
     device: str,
 ) -> Tuple[MILModel, Dict[str, List[float]], List[int], List[float]]:
-    optimizer = optim.Adam(
+    optimizer = optim.AdamW(
         model.parameters(), lr=best_params["learning_rate"], weight_decay=best_params["weight_decay"]
     )
-    loss_weight = best_params["loss_weight"]
+    #loss_weight = best_params["loss_weight"]
+    """
+    scheduler = OneCycleLR(
+        optimizer,
+        max_lr=best_params["learning_rate"],
+        steps_per_epoch=len(training_dataloader),
+        epochs=10,
+        pct_start=0.15, 
+        anneal_strategy='cos'
+    )"""
+    
+    scheduler_epochs = 10
+    warmup_epochs = 1
+    
+    # 2. Warmup: Parte dall'1% del LR e sale in 2 epoche
+    warmup_scheduler = LinearLR(
+        optimizer, start_factor=0.01, total_iters=warmup_epochs
+    )
+    
+    # 3. Decay: Calcola la discesa sulle restanti 13 epoche (15 - 2)
+    decay_scheduler = CosineAnnealingLR(
+        optimizer, T_max=(scheduler_epochs - warmup_epochs), eta_min=1e-6
+    )
+    
+    # 4. Uniamo i due comportamenti
+    scheduler = SequentialLR(
+        optimizer,
+        schedulers=[warmup_scheduler, decay_scheduler],
+        milestones=[warmup_epochs]
+    )"""
+    """scheduler = CosineAnnealingLR(
+        optimizer,
+        T_max=10,
+        eta_min=1e-6
+    )
+    
+    """
+    scheduler = ReduceLROnPlateau(
+        optimizer,
+        mode='max',      # Monitoriamo la Validation Loss (vogliamo che scenda)
+        factor=0.2,      # Freno a mano: riduce il LR dell'80% appena rileva un blocco
+        patience=2,      # Reattività altissima: bastano 2 epoche di stallo per far scattare il taglio
+        min_lr=1e-6,     # Limite inferiore di sicurezza
+    )"""
+    
+    logger.info(f"Setup Training -> Optimizer: {optimizer.__class__.__name__} | Scheduler: {scheduler.__class__.__name__}")
 
     history: Dict[str, List[float]] = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
     best_val_f1 = 0.0
@@ -42,34 +99,44 @@ def train_final_model(
 
             optimizer.zero_grad()
             logits, _ = model(patch_features)
-            loss = sigmoid_focal_loss(logits.view(-1), slide_label.float(), alpha=loss_weight)
+            #loss = sigmoid_focal_loss(logits.view(-1), slide_label.float(), alpha=loss_weight)
+            loss = F.binary_cross_entropy_with_logits(logits.view(-1), slide_label.float())
             loss.backward()
             optimizer.step()
+            
+            """try:
+                scheduler.step()
+            except ValueError:
+                pass
+            """
 
             pred = (torch.sigmoid(logits) > 0.5).long().view(-1)
             total_loss += loss.item()
             correct += (pred == slide_label).sum().item()
             seen += 1
-
+   
         history["train_loss"].append(total_loss / len(training_dataloader))
         history["train_acc"].append(correct / seen)
+        
 
         model.eval()
         total_val_loss, correct_val, seen_val = 0.0, 0, 0
-        val_true, val_pred, val_probs = [], [], []
+        val_true, val_pred, val_probs, val_probs_neg = [], [], [], []
         with torch.no_grad():
             for patch_features, slide_label in validation_dataloader:
                 patch_features = patch_features.to(device)
                 slide_label = slide_label.to(device).view(1)
 
                 logits, _ = model(patch_features)
-                loss = sigmoid_focal_loss(logits.view(-1), slide_label.float(), alpha=loss_weight)
+                #loss = sigmoid_focal_loss(logits.view(-1), slide_label.float(), alpha=loss_weight)
+                loss = F.binary_cross_entropy_with_logits(logits.view(-1), slide_label.float())
                 pred = (torch.sigmoid(logits) > 0.5).long().view(-1)
 
                 prob_neg = torch.sigmoid(logits).item()
                 val_probs.append(1.0 - prob_neg)
                 val_true.append(slide_label.item())
                 val_pred.append(pred.item())
+                val_probs_neg.append(prob_neg)
 
                 total_val_loss += loss.item()
                 correct_val += (pred == slide_label).sum().item()
@@ -78,12 +145,16 @@ def train_final_model(
         history["val_loss"].append(total_val_loss / len(validation_dataloader))
         history["val_acc"].append(correct_val / seen_val)
         val_f1 = f1_score(val_true, val_pred, average="macro", zero_division=0)
+        try:
+            val_auc = roc_auc_score(val_true, val_probs_neg)
+        except ValueError:
+            val_auc = 0.5
 
         logger.info(
-            "Epoch %d/%d | Train Loss: %.4f Acc: %.4f | Val Loss: %.4f Acc: %.4f F1: %.4f",
+            "Epoch %d/%d | Train Loss: %.4f Acc: %.4f | Val Loss: %.4f Acc: %.4f F1: %.4f AUC: %.4f",
             epoch + 1, cfg.training.max_epochs,
             history["train_loss"][-1], history["train_acc"][-1],
-            history["val_loss"][-1], history["val_acc"][-1], val_f1,
+            history["val_loss"][-1], history["val_acc"][-1], val_f1, val_auc
         )
 
         if val_f1 > best_val_f1:
@@ -96,6 +167,6 @@ def train_final_model(
             if epochs_without_improvement >= cfg.training.patience:
                 logger.info("Early stopping activated")
                 break
-
+        scheduler.step(val_f1)
     model.load_state_dict(best_weights)
     return model, history, val_true_final, val_probs_final

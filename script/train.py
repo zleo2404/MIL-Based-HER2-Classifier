@@ -23,6 +23,7 @@ import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, Subset
 
+
 from her2_mil.config import load_config
 from her2_mil.data.dataset import CachedWSIDataset, mil_collate_fn
 from her2_mil.models.registry import build_model
@@ -97,6 +98,7 @@ def main() -> None:
     test_dataloader = DataLoader(test_set, batch_size=1, shuffle=False, collate_fn=mil_collate_fn)
 
     # --- Hyperparameter search (persisted study: resumable if the job dies) ---
+    """
     logger.info("Starting Optuna search (%d trials)...", cfg.optuna.n_trials)
     optuna.logging.set_verbosity(optuna.logging.WARNING)
     study = optuna.create_study(
@@ -113,14 +115,19 @@ def main() -> None:
     objective = make_objective(cfg, feature_dim, training_dataloader, validation_dataloader, device)
     study.optimize(objective, n_trials=cfg.optuna.n_trials)
 
-    best_params = study.best_params
+    best_params = study.best_params"""
+    best_params = {
+        "learning_rate": 1e-4,  # o 2e-4
+        "weight_decay": 1e-2,   # Regolarizzazione forte
+        "dropout": 0.3          # Dropout aggressivo
+    }
     logger.info("Best hyperparameters: %s", best_params)
 
     # --- Final training with best hyperparameters ---
     model = build_model(
         cfg.model.name,
         input_dim=feature_dim,
-        hidden_dim=best_params["hidden_dim"],
+        hidden_dim=cfg.model.hidden_dim,
         num_classes=cfg.model.num_classes,
         dropout=best_params["dropout"],
     ).to(device)
@@ -133,12 +140,12 @@ def main() -> None:
     best_threshold = optimize_threshold(val_true, val_probs, n_trials=cfg.optuna.threshold_trials)
     logger.info("Optimized decision threshold: %.4f", best_threshold)
 
-    test_loss, test_acc, test_f1, test_true, test_pred = evaluate_on_test_set(
-        model, test_dataloader, best_threshold, best_params["loss_weight"], device
+    test_loss, test_acc, test_f1, test_auc, test_true, test_pred = evaluate_on_test_set(
+        model, test_dataloader, best_threshold, device
     )
     plot_confusion_matrix(test_true, test_pred, run_dir / "confusion_matrix.png")
 
-    logger.info("Test Loss: %.4f | Test Accuracy: %.4f | Test F1: %.4f", test_loss, test_acc, test_f1)
+    logger.info("Test Loss: %.4f | Test Accuracy: %.4f | Test F1: %.4f | Test AUC: %.4f", test_loss, test_acc, test_f1, test_auc)
 
     torch.save(model.state_dict(), run_dir / "model.pt")
 
@@ -150,11 +157,11 @@ def main() -> None:
         "Feature_Extractor": args.features_run,
         "Level": cfg.patching.level,
         "Patch_Size": cfg.patching.patch_size,
-        "Hidden_Dim": best_params["hidden_dim"],
+        "Hidden_Dim": cfg.model.hidden_dim,
         "Learning_Rate": best_params["learning_rate"],
         "Weight_Decay": best_params["weight_decay"],
         "Dropout": best_params["dropout"],
-        "Loss_Weight": best_params["loss_weight"],
+        #"Loss_Weight": best_params["loss_weight"],
         "Opt_Threshold": best_threshold,
         "Test_Loss": test_loss,
         "Test_Accuracy": test_acc,

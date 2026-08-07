@@ -7,8 +7,8 @@ paths:
   base_dir: /scratch.hpc/leonardo.meloni/HER2
 
 patching:
-  level: 2
-  patch_size: 1024
+  level: 1
+  patch_size: 256
   tissue_ratio_threshold: 0.4
   artifact_ratio_threshold: 0.05
 
@@ -23,6 +23,8 @@ labels:
 model:
   name: transmil               
   num_classes: 1
+  hidden_dim: 512
+  num_heads: 8
 
 optuna:
   n_trials: 50
@@ -30,14 +32,14 @@ optuna:
   n_warmup_steps: 5
   threshold_trials: 20
   search_space:
-    hidden_dim: [64, 128]
-    learning_rate: [1.0e-5, 1.0e-2]
-    weight_decay: [1.0e-5, 5.0e-3]
-    dropout: [0.2, 0.4]
-    loss_weight: [0.1, 0.3]
+    #hidden_dim: [64, 128]
+    learning_rate: [1.0e-5, 5.0e-4]
+    weight_decay: [1.0e-5, 1.0e-3]
+    dropout: [0.1, 0.4]
+    #loss_weight: [0.1, 0.3]
 
 training:
   max_epochs: 50
-  patience: 7
+  patience: 10
   val_size: 0.30
   test_size_of_val: 0.50

@@ -51,6 +51,8 @@ class ModelConfig:
     # registry key, see her2_mil/models/registry.py -> "abmil" | "transmil" | ...
     name: str = "abmil"
     num_classes: int = 1
+    hidden_dim: int = 512
+    num_heads: int = 8
 
 
 @dataclass
