@@ -1,0 +1,14 @@
+--- Inizio job di Estrazione Patch (Step 2) ---
+Data e ora: Sun Aug  9 05:13:39 PM CEST 2026
+source:  /scratch.hpc/sabrina.tassinari/ProgettoTesi/wsi_organizzate
+patch_save_dir:  /scratch.hpc/leonardo.meloni/CLAM/patching_results/patches
+mask_save_dir:  /scratch.hpc/leonardo.meloni/CLAM/patching_results/masks
+stitch_save_dir:  /scratch.hpc/leonardo.meloni/CLAM/patching_results/stitches
+source : /scratch.hpc/sabrina.tassinari/ProgettoTesi/wsi_organizzate
+save_dir : /scratch.hpc/leonardo.meloni/CLAM/patching_results
+patch_save_dir : /scratch.hpc/leonardo.meloni/CLAM/patching_results/patches
+mask_save_dir : /scratch.hpc/leonardo.meloni/CLAM/patching_results/masks
+stitch_save_dir : /scratch.hpc/leonardo.meloni/CLAM/patching_results/stitches
+{'seg_params': {'seg_level': -1, 'sthresh': 8, 'mthresh': 7, 'close': 4, 'use_otsu': False, 'keep_ids': 'none', 'exclude_ids': 'none'}, 'filter_params': {'a_t': 100, 'a_h': 16, 'max_n_holes': 8}, 'patch_params': {'use_padding': True, 'contour_fn': 'four_pt'}, 'vis_params': {'vis_level': -1, 'line_thickness': 250}}
+--- Job completato ---
+Data e ora: Sun Aug  9 05:13:41 PM CEST 2026

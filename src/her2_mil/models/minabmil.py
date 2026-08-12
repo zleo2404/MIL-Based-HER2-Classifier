@@ -19,6 +19,7 @@ class MinimalAttentionMIL(MILModel):
 
         self.patch_feature_projection = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
             nn.Dropout(p=dropout),
         )
 

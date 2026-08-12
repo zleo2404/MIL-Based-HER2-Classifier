@@ -1,0 +1,8 @@
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+Traceback (most recent call last):
+  File "/scratch.hpc/leonardo.meloni/CLAM/create_patches_fp.py", line 306, in <module>
+    seg_times, patch_times = seg_and_patch(**directories, **parameters,
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch.hpc/leonardo.meloni/CLAM/create_patches_fp.py", line 219, in seg_and_patch
+    seg_times /= total
+ZeroDivisionError: float division by zero
